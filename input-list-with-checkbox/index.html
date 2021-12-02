@@ -9,9 +9,9 @@
 </head>
 <body>
     
-    <div class="mt-4 container">
-        <div class="card p-3">
-            <h4>Input List With Checkbox</h4>
+    <div class="mt-4 container center-content">
+        <div class="card p-3" style="max-width: 400px;">
+            <h4 class="text-center">Input List With Checkbox</h4>
             
             <div id="content"></div>
 
@@ -30,8 +30,10 @@
                 this.inputList.className = 'mt-4 mb-4';
                 this.inputList.id = this.generateId();
 
-                this.appendRow({ value:'First Input test', checked: false })
-
+                this.appendRow({ value:'', checked: false })
+                this.appendRow({ value:'', checked: false })
+                this.appendRow({ value:'', checked: false })
+                this.appendRow({ value:'', checked: false })
             }
 
             generateRow ({ value, checked }) {
@@ -74,7 +76,6 @@
 
             init() {
                 this.inputList = document.getElementById('content-list');
-                // render input list with checkbox into div main
             }
 
             onKeyPress (event) {
@@ -91,12 +92,13 @@
                     const isFieldEmpty = this.inputs.filter(e=>e.id == this.focusedInput)[0].input.value.trim() == ''
                     if(isFieldEmpty && this.inputs.length > 1) {
                         const index = this.inputs.findIndex(e => e.id == this.focusedInput)
-    
+                        
                         // Remove from rendering
                         this.inputs[index].inputRow.remove()
-
+                        
                         // Remove from array
                         this.inputs = this.inputs.filter((_, i) => i != index);
+                        event.preventDefault();
 
                         this.focusInput(this.inputs[this.inputs.length-1].input)
                     }
@@ -150,6 +152,11 @@
     .custom-checkbox {
         width: 20px;
         height: 20px;
+    }
+    .center-content {
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 </style>
 
