@@ -24,7 +24,7 @@
                 
                 this.inputs = []
 
-                this.actualInputFocus = 1
+                this.focusedInput = 1
 
                 this.inputList = document.createElement('div');
                 this.inputList.className = 'mt-4 mb-4';
@@ -87,10 +87,10 @@
 
                 // Backspace Pressed
                 if (key == 8) {
-                    const isFieldEmpty = this.inputs[this.actualInputFocus].input.value.trim() == ''
+                    const isFieldEmpty = this.inputs[this.focusedInput].input.value.trim() == ''
                     if(isFieldEmpty && this.inputs.length > 1) {
-                        this.inputs[this.actualInputFocus].inputRow.remove()
-                        this.inputs = this.inputs.filter((_, index) => index != this.actualInputFocus);
+                        this.inputs[this.focusedInput].inputRow.remove()
+                        this.inputs = this.inputs.filter((_, index) => index != this.focusedInput);
                         this.focusInput(this.inputs[this.inputs.length-1].input)
                     }
                 }
@@ -108,7 +108,7 @@
             }
 
             onFocusedInput (event) {
-                this.actualInputFocus = event.path[1].id.split('-')[3]
+                this.focusedInput = event.path[1].id.split('-')[3]
             }
 
             onCheckBoxChanged (event) {
