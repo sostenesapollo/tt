@@ -68,7 +68,7 @@
                 inputRow.className = "input-group"
                 inputRow.appendChild(input)
 
-                return inputRow
+                return {inputRow, input}
 
             }
 
@@ -85,14 +85,14 @@
             }
             
             appendRow(rowValues) {
-                const emptyRow = this.generateRow(rowValues)
-                this.inputList.appendChild(emptyRow)
-                this.focusInput(emptyRow)
+                const { input, inputRow } = this.generateRow(rowValues)
+                this.inputList.appendChild(inputRow)
+                this.focusInput(input)
             }
             
-            focusInput (emptyRow) {
-                // emptyRow.focus();
-                console.log(emptyRow)
+            focusInput (input) {
+                input.focus();
+                console.log(input)
             }
 
             generateId() {
