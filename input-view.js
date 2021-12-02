@@ -6,11 +6,10 @@
 class InputView extends BaseInput {
 
     constructor(config) {
-        super(config);
 
         // Define a configuração padrão da classe
         this.config = {
-            type: WIDGET_INPUT,
+            type: 'WIDGET_INPUT',
             name: undefined,
             maxLength: undefined,
             value: undefined,

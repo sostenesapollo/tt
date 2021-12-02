@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Input List With Checkbox</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+</head>
+<body>
+    
+    <div class="mt-4 container">
+        <div class="card p-3">
+            <h4>Input List With Checkbox</h4>
+            
+            <div id="content"></div>
+        
+            <!-- <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text custom-right-checkbox-span">
+                        <input class="input-group-text custom-checkbox" type="checkbox">
+                    </span>
+                </div>
+                <input type="text" class="form-control">
+            </div> -->
+        
+
+        </div>
+    </div>
+
+    <script>
+        class InputListWithCheckbox {
+            constructor() {
+                
+                this.inputs = []
+
+                this.inputList = document.createElement('div');
+                this.inputList.className = 'mt-4 mb-4';
+                this.inputList.id = this.generateId();
+
+                this.appendRow({ value:'First Input test', checked: true })
+
+            }
+
+            generateRow ({ value, checked }) {
+                
+                const checkBox = document.createElement('input')
+                checkBox.type = "checkbox"
+                checkBox.className = "input-group-text custom-checkbox"
+                checkBox.checked = checked
+
+                const checkBoxSpan = document.createElement('span')
+                checkBoxSpan.className = "input-group-text custom-right-checkbox-span"
+                checkBoxSpan.appendChild(checkBox)
+                
+                const leftRowGroup = document.createElement('div')
+                leftRowGroup.className = "input-group-prepend"
+                leftRowGroup.appendChild(checkBoxSpan)
+                
+                const inputRow = document.createElement('div')
+                inputRow.appendChild(leftRowGroup)
+
+                const input = document.createElement('input')
+                input.className = "form-control"
+                input.addEventListener("keypress", this.onKeyPress.bind(this))
+                input.value = value
+
+                inputRow.className = "input-group"
+                inputRow.appendChild(input)
+
+                return inputRow
+
+            }
+
+            init() {
+                this.inputList = document.getElementById('content-list');
+                // render input list with checkbox into div main
+            }
+
+            onKeyPress (event) {
+                if (event.keyCode === 13) {
+                    event.preventDefault();
+                    this.appendRow({value: '', checked: false})
+                }
+            }
+            
+            appendRow(rowValues) {
+                const emptyRow = this.generateRow(rowValues)
+                this.inputList.appendChild(emptyRow)
+                this.focusInput(emptyRow)
+            }
+            
+            focusInput (emptyRow) {
+                // emptyRow.focus();
+                console.log(emptyRow)
+            }
+
+            generateId() {
+                return 'el-' + Math.floor(Math.random() * 1000000);
+            }
+
+            render() {
+                this.contentId = 'content'
+                document.getElementById(this.contentId).appendChild(this.inputList)
+            }
+        }
+
+        const inputListWithCheckbox = new InputListWithCheckbox();
+        inputListWithCheckbox.render();
+
+    </script>
+
+<style>
+    .custom-right-checkbox-span {
+        height: 100%;
+    }
+    .custom-checkbox {
+        width: 20px;
+        height: 20px;
+    }
+</style>
+
+</body>
+</html>
