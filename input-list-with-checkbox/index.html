@@ -14,16 +14,6 @@
             <h4>Input List With Checkbox</h4>
             
             <div id="content"></div>
-        
-            <!-- <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                    <span class="input-group-text custom-right-checkbox-span">
-                        <input class="input-group-text custom-checkbox" type="checkbox">
-                    </span>
-                </div>
-                <input type="text" class="form-control">
-            </div> -->
-        
 
         </div>
     </div>
@@ -40,7 +30,7 @@
                 this.inputList.className = 'mt-4 mb-4';
                 this.inputList.id = this.generateId();
 
-                this.appendRow({ value:'First Input test', checked: true })
+                this.appendRow({ value:'First Input test', checked: false })
 
             }
 
@@ -50,6 +40,8 @@
                 checkBox.type = "checkbox"
                 checkBox.className = "input-group-text custom-checkbox"
                 checkBox.checked = checked
+                checkBox.id = `${this.inputList.id}-checkbox-${this.inputs.length}`
+                checkBox.addEventListener("click", this.onCheckBoxChanged.bind(this))
 
                 const checkBoxSpan = document.createElement('span')
                 checkBoxSpan.className = "input-group-text custom-right-checkbox-span"
@@ -73,7 +65,7 @@
                 inputRow.className = "input-group pt-1"
                 inputRow.appendChild(input)
 
-                this.inputs.push({ value, checked, input })
+                this.inputs.push({ value, checked, input, checkBox, inputRow })
 
                 return {inputRow, input}
 
@@ -85,25 +77,45 @@
             }
 
             onKeyPress (event) {
-                
-                // event.preventDefault();                
+                           
                 const key = event.keyCode || event.charCode
 
                 // Enter Pressed
                 if (key == 13) {
                     this.appendRow({value: '', checked: false})
                 }
+
                 // Backspace Pressed
                 if (key == 8) {
-                    console.log(this.inputs[this.actualInputFocus])
-                    const isFieldEmpty = this.inputs[this.actualInputFocus].input.value
-                    console.log("remove row", this.actualInputFocus, isFieldEmpty)
-                }  
+                    const isFieldEmpty = this.inputs[this.actualInputFocus].input.value.trim() == ''
+                    if(isFieldEmpty && this.inputs.length > 1) {
+                        this.inputs[this.actualInputFocus].inputRow.remove()
+                        this.inputs = this.inputs.filter((_, index) => index != this.actualInputFocus);
+                        this.focusInput(this.inputs[this.inputs.length-1].input)
+                    }
+                }
 
+                if (key == 13 || key == 8)  
+                    console.log(this.getInputValues())
+
+            }
+
+            getInputValues() {
+                return this.inputs.map(({value, checked, input})=>({
+                    value: input.value, 
+                    checked
+                }))
             }
 
             onFocusedInput (event) {
                 this.actualInputFocus = event.path[1].id.split('-')[3]
+            }
+
+            onCheckBoxChanged (event) {
+                const id = event.target.id.split('-')[3]
+                this.inputs[id].checked = !this.inputs[id].checked
+                
+                console.log(this.getInputValues())
             }
             
             appendRow(rowValues) {
