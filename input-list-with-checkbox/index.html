@@ -34,6 +34,8 @@
                 
                 this.inputs = []
 
+                this.actualInputFocus = 1
+
                 this.inputList = document.createElement('div');
                 this.inputList.className = 'mt-4 mb-4';
                 this.inputList.id = this.generateId();
@@ -43,7 +45,7 @@
             }
 
             generateRow ({ value, checked }) {
-                
+
                 const checkBox = document.createElement('input')
                 checkBox.type = "checkbox"
                 checkBox.className = "input-group-text custom-checkbox"
@@ -59,14 +61,19 @@
                 
                 const inputRow = document.createElement('div')
                 inputRow.appendChild(leftRowGroup)
-
+                inputRow.id = `${this.inputList.id}-row-${this.inputs.length}`
+                
                 const input = document.createElement('input')
                 input.className = "form-control"
-                input.addEventListener("keypress", this.onKeyPress.bind(this))
+                input.addEventListener("keydown", this.onKeyPress.bind(this))
+                input.addEventListener("focus",   this.onFocusedInput.bind(this))
+                input.id = `${this.inputList.id}-input-${this.inputs.length}`
                 input.value = value
 
-                inputRow.className = "input-group"
+                inputRow.className = "input-group pt-1"
                 inputRow.appendChild(input)
+
+                this.inputs.push({ value, checked, input })
 
                 return {inputRow, input}
 
@@ -78,10 +85,25 @@
             }
 
             onKeyPress (event) {
-                if (event.keyCode === 13) {
-                    event.preventDefault();
+                
+                // event.preventDefault();                
+                const key = event.keyCode || event.charCode
+
+                // Enter Pressed
+                if (key == 13) {
                     this.appendRow({value: '', checked: false})
                 }
+                // Backspace Pressed
+                if (key == 8) {
+                    console.log(this.inputs[this.actualInputFocus])
+                    const isFieldEmpty = this.inputs[this.actualInputFocus].input.value
+                    console.log("remove row", this.actualInputFocus, isFieldEmpty)
+                }  
+
+            }
+
+            onFocusedInput (event) {
+                this.actualInputFocus = event.path[1].id.split('-')[3]
             }
             
             appendRow(rowValues) {
@@ -92,7 +114,6 @@
             
             focusInput (input) {
                 input.focus();
-                console.log(input)
             }
 
             generateId() {
