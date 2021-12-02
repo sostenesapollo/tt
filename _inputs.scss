@@ -1,0 +1,299 @@
+// Inputs 
+.ip-grid {
+    background-color: #f5f6ff;
+    padding: 0 20px;
+}
+ 
+.ip {
+    position: relative;
+    padding-left: 0 !important;    
+    display: block;
+    line-height: normal;
+    text-align: left;
+    height: $input-ip-height;
+    border-bottom: $input-ip-border-bottom;
+    padding-top: $input-ip-padding-top;
+    font-family: $input-font-family;
+
+    @media screen and (max-width: 1400px - 1px) {
+
+        // Input
+        input {
+        //   font-size: 14px !important;
+        font-size: 14px;
+        }
+      
+    }
+
+    // Default Style 
+    input {
+        padding: 14px 20px 0px 0px;
+        position: absolute;
+        border: none;
+        // bottom: 0; 
+        box-sizing: border-box;
+        font-family: $input-font-family;
+        width: $full;     
+        color: $input-text-color;   
+        font-size: $input-font-size;  
+        // padding-right: $input-padding-right;
+        background-color: $input-background-color;
+    }
+
+    >label { 
+        @extend .tx-ct;
+        position: absolute;
+        left: 0;
+        z-index: 1;
+        padding-left: 0;        
+        pointer-events: none;
+        // text-transform: capitalize;
+        text-align: center;
+        top: $input-label-top;
+        font-size: $input-label-font-size;
+        color: $input-label-text-color; 
+        @include transition($input-transition); 
+    }
+
+    // Events
+    input:focus {
+        outline: 0;
+    }
+
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover, 
+    input:-webkit-autofill:focus, 
+    input:-webkit-autofill:active  {
+        -webkit-box-shadow: 0 0 0 30px white inset !important;
+        box-shadow: 0 0 0 30px white inset !important;
+    }
+
+
+    input~span,
+    &.active>span {
+        // display: block;
+        font-size: $input-label-font-size;
+        // position: absolute;
+        // bottom: -1px;
+        // left: 0;
+        // width: 0;
+        // height: $input-span-active-height;
+        // background: $input-span-active-background-color;
+        @include transition($input-transition);
+
+        &.marker {
+            margin:0;
+            font-size: $input-marker-font-size; 
+        }
+    }
+
+    input:focus~span,
+    &.active {
+        width: $full;
+        @include transition($input-transition);
+    }
+
+    input:focus~label,
+    &.active>label {
+        color: $input-label-focus-text-color;
+        font-size: $input-label-focus-font-size;
+        top: $input-label-focus-top;
+        @include transition($input-transition);
+        @include transform(translateY(-$full));
+    }
+
+    // Colored Inputs 
+    @each $key,
+    $color in $input-colors {
+        @include input-colored($key, $color);
+    }
+
+    // Dica do input
+    .ip-ht {
+        @include transition($input-transition);
+        top: 20px;
+        right: 0;
+        bottom: 0;
+        opacity: 0;
+        z-index: 2;
+        position: absolute;
+        color: $input-hint-text-color; 
+
+        // Icon
+        i {
+            cursor: pointer;
+        }
+
+        &.active {
+            opacity: 1;
+        }
+    }
+
+    &:hover {
+        + .ip-ht {
+            opacity: 1;
+        }
+    }
+
+    &.ip-rd{
+        border: none;
+    }
+
+    // Busca por novo módulo
+    ~ .ip-sh {
+        right: 0;
+        bottom: 0;
+        position: absolute;
+        color: $input-hint-text-color; 
+        margin-right: 10px;
+        cursor: pointer;
+    }
+
+    // Select
+    &.ip-cs {
+        height: unset;
+        position: relative;
+        min-height: $input-ip-height;   
+
+        // > input {
+        //     position: relative;
+        // }
+
+        .ip-sr {
+            left: 0px;
+            right: 20px;
+            position: relative;
+            padding-top: $input-chosen-search-padding;
+            padding-bottom: $input-chosen-search-padding;         
+        }
+
+        .cp + .cp {
+            margin-left: $input-chosen-cp-margin-left;
+        }
+
+        
+        ul.cs-mn::-webkit-scrollbar{
+            width: 5px;
+        }
+
+        ul.cs-mn::-webkit-scrollbar {
+            width: $scroll-bar-responsive-width;
+            height: $scroll-bar-responsive-height;
+        }
+    
+        ul.cs-mn::-webkit-scrollbar-thumb {
+            background-color: darken($color-light, 7%) !important;
+            border-radius: $scroll-bar-responsive-border-radius;
+        }
+
+
+        ul.cs-mn {     
+            z-index: 3;
+            overflow-y: auto;
+            display: none;
+            position: absolute;
+            top: $full;
+            width: $full;
+            border-radius:$dimen-md;
+            max-height: $input-chosen-menu-max-height;
+            background-color: $input-chosen-menu-background-color;
+            @include material-shadow($input-chosen-menu-color-shadow);
+
+
+            > li {
+                cursor: pointer;
+                padding: $input-chosen-li-padding;
+                & * {
+                    color: $input-chosen-li-text-color;
+                } 
+                font-size: $input-chosen-li-font-size;
+                @include transition($input-chosen-li-transition);
+
+                &.hl {
+                    cursor: pointer;
+                    & * {
+                        color: $input-chosen-highlighted-text-color;
+                    }
+                    background-color: $input-chosen-highlighted-background-color;
+                }
+
+                // Selected
+                &.sl {
+                    color: $input-chosen-selected-text-color;
+                    background-color: $input-chosen-selected-background-color;
+
+                    // Highlighted
+                    &.hl {
+                        color: $input-chosen-selected-and-highlighted-text-color;
+                        background-color: $input-chosen-selected-and-highlighted-background-color;
+                    }
+                }
+            }
+
+            &.show {
+                display: block;
+            }
+        }
+
+    }
+}
+
+// Helper
+.ip-hp {
+    font-size: $input-helper-font-size;
+    color: $input-helper-text-color;
+    padding-top: $input-helper-padding-top;
+    width: 100%;
+}
+
+// Erro do input
+.ip-er {
+    @extend .tx-ct;
+    left: 0;
+    right: 0;
+    text-align: left;
+    position: absolute;
+    font-size: $input-error-font-size;
+    color: $input-error-text-color;
+    bottom: $input-error-bottom;   
+}
+
+// Dica do input
+.ip-ht {    
+    top: 20px;
+    right: 0;
+    bottom: 0;
+    opacity: 0;
+    z-index: 2;
+    position: absolute;
+    color: $input-hint-text-color;
+    margin-right: 10px;
+    @include transition($input-transition);
+
+    // Icon
+    i {
+        cursor: pointer;
+    }
+
+    &.active {
+        opacity: 1;
+    }
+
+    &:hover {
+        opacity: 1;
+    }
+}
+
+// Chrome
+@media screen and (-webkit-min-device-pixel-ratio:0) and (min-resolution:.001dpcm) {
+    .ip {
+        input:focus ~ label,
+        input:-webkit-autofill ~ label,
+        &.active > label { 
+            color: $input-label-focus-text-color;
+            font-size: $input-label-focus-font-size;
+            @include transform(translateY(-$full));
+            @include transition($input-transition);
+        }
+    }
+}
