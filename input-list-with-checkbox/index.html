@@ -36,12 +36,13 @@
 
             generateRow ({ value, checked }) {
 
+                const id = (this.inputs[this.inputs.length-1]?.id + 1) || 1
+
                 const checkBox = document.createElement('input')
                 checkBox.type = "checkbox"
                 checkBox.className = "input-group-text custom-checkbox"
                 checkBox.checked = checked
                 checkBox.id = `${this.inputList.id}-checkbox-${this.inputs.length}`
-                checkBox.addEventListener("click", this.onCheckBoxChanged.bind(this))
 
                 const checkBoxSpan = document.createElement('span')
                 checkBoxSpan.className = "input-group-text custom-right-checkbox-span"
@@ -53,19 +54,19 @@
                 
                 const inputRow = document.createElement('div')
                 inputRow.appendChild(leftRowGroup)
-                inputRow.id = `${this.inputList.id}-row-${this.inputs.length}`
+                inputRow.id = `${this.inputList.id}-row-${id}`
                 
                 const input = document.createElement('input')
                 input.className = "form-control"
                 input.addEventListener("keydown", this.onKeyPress.bind(this))
                 input.addEventListener("focus",   this.onFocusedInput.bind(this))
-                input.id = `${this.inputList.id}-input-${this.inputs.length}`
+                input.id = `${this.inputList.id}-input-${id}`
                 input.value = value
 
                 inputRow.className = "input-group pt-1"
                 inputRow.appendChild(input)
 
-                this.inputs.push({ value, checked, input, checkBox, inputRow })
+                this.inputs.push({ id, value, checked, input, checkBox, inputRow })
 
                 return {inputRow, input}
 
@@ -87,10 +88,16 @@
 
                 // Backspace Pressed
                 if (key == 8) {
-                    const isFieldEmpty = this.inputs[this.focusedInput].input.value.trim() == ''
+                    const isFieldEmpty = this.inputs.filter(e=>e.id == this.focusedInput)[0].input.value.trim() == ''
                     if(isFieldEmpty && this.inputs.length > 1) {
-                        this.inputs[this.focusedInput].inputRow.remove()
-                        this.inputs = this.inputs.filter((_, index) => index != this.focusedInput);
+                        const index = this.inputs.findIndex(e => e.id == this.focusedInput)
+    
+                        // Remove from rendering
+                        this.inputs[index].inputRow.remove()
+
+                        // Remove from array
+                        this.inputs = this.inputs.filter((_, i) => i != index);
+
                         this.focusInput(this.inputs[this.inputs.length-1].input)
                     }
                 }
@@ -101,21 +108,14 @@
             }
 
             getInputValues() {
-                return this.inputs.map(({value, checked, input})=>({
+                return this.inputs.map(({value, checkBox, input})=>({
                     value: input.value, 
-                    checked
+                    checked: checkBox.checked
                 }))
             }
 
             onFocusedInput (event) {
                 this.focusedInput = event.path[1].id.split('-')[3]
-            }
-
-            onCheckBoxChanged (event) {
-                const id = event.target.id.split('-')[3]
-                this.inputs[id].checked = !this.inputs[id].checked
-                
-                console.log(this.getInputValues())
             }
             
             appendRow(rowValues) {
