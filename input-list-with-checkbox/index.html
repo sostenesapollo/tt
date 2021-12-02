@@ -9,7 +9,7 @@
 </head>
 <body>
     
-    <div class="mt-4 container center-content">
+    <div class="mt-4 container center-content mt-5">
         <div class="card p-3" style="max-width: 400px;">
             <h4 class="text-center">Input List With Checkbox</h4>
             
@@ -30,10 +30,10 @@
                 this.inputList.className = 'mt-4 mb-4';
                 this.inputList.id = this.generateId();
 
-                this.appendRow({ value:'', checked: false })
-                this.appendRow({ value:'', checked: false })
-                this.appendRow({ value:'', checked: false })
-                this.appendRow({ value:'', checked: false })
+                // Create n Fields
+                for (let i = 1; i <= 10; i++) {
+                    this.appendRow({ value:'', checked: false })
+                }
             }
 
             generateRow ({ value, checked }) {
